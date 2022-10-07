@@ -70,7 +70,7 @@ const server = app.listen(8081, function () {
   console.log(`App listening at http://127.0.0.1:8081/`);
 });
 
-// REST API to save car data to carsMockData
+// save car data
 app.post("/save", (request, response) => {
   const carDataToAdd = request.body;
   let returnResponse = {};
@@ -78,11 +78,11 @@ app.post("/save", (request, response) => {
   // Check if item already in the carsMockData
   carsMockData.map((car, indx) => {
     if (car.id === carDataToAdd.id) {
-      // check if data already is in the carsMockData
+      // check for duplicate data
       if (_.isEqual(car, carDataToAdd)) {
         returnResponse = { status: 500, message: "Car already exists" };
       } else {
-        // Update existing carData
+        // update the same data if already in the database
         carsMockData[indx] = carDataToAdd;
         returnResponse = {
           status: 200,
@@ -94,7 +94,7 @@ app.post("/save", (request, response) => {
   });
 
   if (!carsMockData.some((carData) => carData.id === carDataToAdd.id)) {
-    // Add car to the carsMockData
+    // ---- car data
     carsMockData.push(carDataToAdd);
     returnResponse = {
       status: 200,
@@ -106,7 +106,7 @@ app.post("/save", (request, response) => {
   response.json(returnResponse);
 });
 
-// REST API to edit car data in carsMockData
+// edit car data in carsMockData
 app.put("/edit", (request, response) => {
   const carIdToEdit = request.body.id;
   let returnResponse = {
@@ -127,17 +127,17 @@ app.put("/edit", (request, response) => {
   response.json(returnResponse);
 });
 
-// REST API to delete car data from carsMockData
+// delete car data from carsMockData
 app.delete("/delete", (request, response) => {
   const carIdToDelete = request.body.id;
   let returnResponse = {};
   const initialLenght = carsMockData.length;
 
-  //   Remove the car from carsMockData if the id matches
+  //   Remove the card data based upon id
   carsMockData = carsMockData.filter((carData) => carData.id !== carIdToDelete);
 
   if (carsMockData.length === initialLenght) {
-    // check if item was deleted or not
+    // check if deleted or not
     returnResponse = { status: 500, message: "No car with given id exists" };
   } else {
     returnResponse = {
