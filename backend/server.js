@@ -106,4 +106,46 @@ app.post("/save", (request, response) => {
   response.json(returnResponse);
 });
 
-//
+// REST API to edit car data in carsMockData
+app.put("/edit", (request, response) => {
+  const carIdToEdit = request.body.id;
+  let returnResponse = {
+    status: 500,
+    message: "No car data found to be updated!",
+  };
+  const carToEdit = carsMockData.filter(
+    (cardData) => cardData.id === carIdToEdit
+  );
+
+  if (carToEdit) {
+    returnResponse = {
+      status: 200,
+      response: carToEdit,
+    };
+  }
+
+  response.json(returnResponse);
+});
+
+// REST API to delete car data from carsMockData
+app.delete("/delete", (request, response) => {
+  const carIdToDelete = request.body.id;
+  let returnResponse = {};
+  const initialLenght = carsMockData.length;
+
+  //   Remove the car from carsMockData if the id matches
+  carsMockData = carsMockData.filter((carData) => carData.id !== carIdToDelete);
+
+  if (carsMockData.length === initialLenght) {
+    // check if item was deleted or not
+    returnResponse = { status: 500, message: "No car with given id exists" };
+  } else {
+    returnResponse = {
+      status: 200,
+      message: "item deleted",
+      response: carsMockData,
+    };
+  }
+
+  response.json(returnResponse);
+});
